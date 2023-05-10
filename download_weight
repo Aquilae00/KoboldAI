@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+import aiserver
+aiserver.general_startup()
+aiserver.patch_transformers()
+aiserver.load_model(**{'initial_load':True})
