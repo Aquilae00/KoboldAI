@@ -951,7 +951,7 @@ class HFTorchInferenceModel(HFInferenceModel):
                     f"{Colors.CYAN}\nHow many of the remaining{Colors.YELLOW} {n_layers} {Colors.CYAN}layers would you like to put into device {i}?\nYou can also enter -1 to allocate all remaining layers to this device.{Colors.END}\n"
                 )
                 while True:
-                    layerselect = -1
+                    layerselect = "-1"
                     if (
                         layerselect.isnumeric() or layerselect.strip() == "-1"
                     ) and -1 <= int(layerselect) <= n_layers:
@@ -975,7 +975,7 @@ class HFTorchInferenceModel(HFInferenceModel):
                     f"{Colors.CYAN}\nHow many of the remaining{Colors.YELLOW} {n_layers} {Colors.CYAN}layers would you like to put into the disk cache?\nYou can also enter -1 to allocate all remaining layers to this device.{Colors.END}\n"
                 )
                 while True:
-                    layerselect = -1
+                    layerselect = "-1"
                     if (
                         layerselect.isnumeric() or layerselect.strip() == "-1"
                     ) and -1 <= int(layerselect) <= n_layers:
