@@ -52,6 +52,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
 
         tf_kwargs = {
             "low_cpu_mem_usage": True,
+            "from_tf":True
         }
 
         if utils.koboldai_vars.model_type == "gpt2":
