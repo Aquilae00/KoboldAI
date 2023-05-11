@@ -11,6 +11,7 @@ from enum import Enum
 import random
 import shutil
 import eventlet
+import time
 
 eventlet.monkey_patch(all=True, thread=False, os=False)
 import os, inspect
@@ -3813,11 +3814,16 @@ def apiactionsubmit(data, use_memory=False, use_world_info=False, use_story=Fals
     minimum = len(tokens) + 1
     maximum = len(tokens) + koboldai_vars.genamt
 
+    startTime = time.time()
+
     if(not koboldai_vars.use_colab_tpu and koboldai_vars.model not in ["Colab", "API", "CLUSTER", "OAI", "TPUMeshTransformerGPTJ", "TPUMeshTransformerGPTNeoX"]):
         genout = apiactionsubmit_generate(tokens, minimum, maximum)
     elif(koboldai_vars.use_colab_tpu or koboldai_vars.model in ("TPUMeshTransformerGPTJ", "TPUMeshTransformerGPTNeoX")):
         genout = apiactionsubmit_tpumtjgenerate(tokens, minimum, maximum)
 
+    endTime = time.time()
+    howMuchTime = endTime - startTime
+    print(str(howMuchTime) + " sec")
     return genout
 
 #==================================================================#
