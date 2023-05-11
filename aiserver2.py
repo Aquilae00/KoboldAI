@@ -1290,6 +1290,154 @@ def spRequest(filename):
     if(old_filename != filename):
             koboldai_vars.sp_changed = True
 
+class Namespace():
+  def __init__(self):
+    self.cpu=False
+    self.peft=None
+    self.breakmodel_disklayers=None
+    self.breakmodel_gpulayers=None
+    self.breakmodel_layers=None
+    self.model="PygmalionAI/pygmalion-6b"
+    self.no_aria2=None
+    
+class VarClass():
+  def __init__(self):
+    self.model="PygmalionAI/pygmalion-6b"
+    self.noai        = False  # Runs the script without starting up the transformers pipeline
+    self.aibusy      = False  # Stops submissions while the AI is working
+    self.status_message = ""
+    self.serverstarted = False  # Whether or not the Flask server has started
+    self.lua_state   = None   # Lua state of the Lua scripting system
+    self.lua_koboldbridge = None  # `koboldbridge` from bridge.lua
+    self.lua_kobold  = None   # `kobold` from` bridge.lua
+    self.lua_koboldcore = None  # `koboldcore` from bridge.lua
+    self.lua_logname = ...    # Name of previous userscript that logged to terminal
+    self.lua_running = False  # Whether or not Lua is running (i.e. wasn't stopped due to an error)
+    self.abort       = False  # Whether or not generation was aborted by clicking on the submit button during generation
+    self.compiling   = False  # If using a TPU Colab, this will be set to True when the TPU backend starts compiling and then set to False again
+    self.checking    = False  # Whether or not we are actively checking to see if TPU backend is compiling or not
+    self.sp_changed  = False  # This gets set to True whenever a userscript changes the soft prompt so that check_for_sp_change() can alert the browser that the soft prompt has changed
+    self.spfilename  = ""     # Filename of soft prompt to load, or an empty string if not using a soft prompt
+    self.userscripts = []     # List of userscripts to load
+    self.last_userscripts = []  # List of previous userscript filenames from the previous time userscripts were send via usstatitems
+    self.corescript  = "default.lua"  # Filename of corescript to load
+    self.gpu_device  = 0      # Which PyTorch device to use when using pure GPU generation
+    self.hascuda     = True  # Whether torch has detected CUDA on the system
+    self.usegpu      = True  # Whether to launch pipeline with GPU support
+    self.splist      = []
+    self.spselect    = ""     # Temporary storage for soft prompt filename to load
+    self.spmeta      = None   # Metadata of current soft prompt, or None if not using a soft prompt
+    self.spname      = "Not in Use"     # Name of the soft prompt    
+    self.sp          = None   # Current soft prompt tensor (as a NumPy array)
+    self.sp_length   = 0      # Length of current soft prompt in tokens, or 0 if not using a soft prompt
+    self.has_genmod  = False  # Whether or not at least one loaded Lua userscript has a generation modifier
+    self.breakmodel  = True  # For GPU users, whether to use both system RAM and VRAM to conserve VRAM while offering speedup compared to CPU-only
+    self.bmsupported = False  # Whether the breakmodel option is supported (GPT-Neo/GPT-J/XGLM/OPT only, currently)
+    self.nobreakmodel = False  # Something specifically requested Breakmodel to be disabled (For example a models config)
+    self.smandelete  = False  # Whether stories can be deleted from inside the browser
+    self.smanrename  = False  # Whether stories can be renamed from inside the browser
+    self.allowsp     = False  # Whether we are allowed to use soft prompts (by default enabled if we're using GPT-2, GPT-Neo or GPT-J)
+    self.host        = False
+    self.flaskwebgui = False
+    self.quiet       = False # If set will suppress any story text from being printed to the console (will only be seen on the client web page)
+    self.use_colab_tpu  = False  # Whether or not we're in a Colab TPU instance or Kaggle TPU instance and are going to use the TPU rather than the CPU
+    self.aria2_port  = 6799 #Specify the port on which aria2's RPC interface will be open if aria2 is installed (defaults to 6799)
+    self.standalone = False
+    self.api_tokenizer_id = None
+    self.disable_set_aibusy = False
+    self.disable_input_formatting = False
+    self.disable_output_formatting = False
+    self.full_determinism = False  # Whether or not full determinism is enabled
+    self.seed_specified = False  # Whether or not the current RNG seed was specified by the user (in their settings file)
+    self.rng_states = {} # creates an empty dictionary to store the random number generator (RNG) states for a given seed, which is used to restore the RNG state later on
+    self.seed        = None   # The current RNG seed (as an int), or None if unknown
+    self.alt_gen = False # Use the calc_ai_text method for generating text to go to the AI
+    self.cloudflare_link = ""
+    self.story_loads = {} #dict of when each story was last loaded
+    self.standalone = False
+    self.disable_set_aibusy = False
+    self.disable_input_formatting = False
+    self.disable_output_formatting = False
+    self.api_tokenizer_id = None
+    self.port = 5000
+    self.on_colab = True
+    self.horde_share = False
+    self._horde_pid = None
+    self.generating_image = False #The current status of image generation
+    self.image_pipeline = None
+    self.summarizer = None
+    self.summary_tokenizer = None
+    self.keep_img_gen_in_memory = False
+    self.cookies = {} #cookies for colab since colab's URL changes, cookies are lost
+    self.experimental_features = False
+    self.seen_messages = []
+    self.git_repository = ""
+    self.git_branch = ""
+
+    self.trust_remote_code = False
+    self.wirmvwhtsp  = False             # Whether to remove leading whitespace from WI entries
+    self.widepth     = 3                 # How many historical actions to scan for WI hits
+    self.formatoptns = {'frmttriminc': True, 'frmtrmblln': False, 'frmtrmspch': False, 'frmtadsnsp': True, 'singleline': False}     # Container for state of formatting options
+    self.frmttriminc = True
+    self.frmtrmblln  = False
+    self.frmtrmspch  = False
+    self.frmtadsnsp  = True
+    self.singleline  = False
+    self.remove_double_space = True
+    self.importnum   = -1                # Selection on import popup list
+    self.importjs    = {}                # Temporary storage for import data
+    self.loadselect  = ""                # Temporary storage for story filename to load
+    self.spselect    = ""                # Temporary storage for soft prompt filename to load
+    self.svowname    = ""                # Filename that was flagged for overwrite confirm
+    self.saveow      = False             # Whether or not overwrite confirm has been displayed
+    self.laststory   = None              # Filename (without extension) of most recent story JSON file we loaded
+    self.sid         = ""                # session id for the socketio client (request.sid)
+    self.username    = "Default User"    # Displayed Username
+    self.nopromptgen = False
+    self.rngpersist  = False
+    self.nogenmod    = False
+    self.debug       = False    # If set to true, will send debug information to the client for display
+    self.output_streaming = True
+    self.show_probs = False # Whether or not to show token probabilities
+    self.beep_on_complete = False
+    self.img_gen_priority = 1
+    self.show_budget = False
+    self.ui_level    = 2
+    self.img_gen_api_url = "http://127.0.0.1:7860"
+    self.img_gen_art_guide = "masterpiece, digital painting, <|>, dramatic lighting, highly detailed, trending"
+    self.img_gen_negative_prompt = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name"
+    self.img_gen_api_username = ""
+    self.img_gen_api_password = ""
+    self.img_gen_steps = 30
+    self.img_gen_cfg_scale = 7.0
+    self.cluster_requested_models = [] # The models which we allow to generate during cluster mode
+    self.wigen_use_own_wi = False
+    self.wigen_amount = 80
+    self.screenshot_show_story_title = True
+    self.screenshot_show_author_name = True
+    self.screenshot_author_name = "Anonymous"
+    self.screenshot_use_boring_colors = False
+    self.oaiurl      = "" # OpenAI API URL
+    self.revision    = None
+    self.oaiengines  = "https://api.openai.com/v1/engines"
+    self.url         = "https://api.inferkit.com/v1/models/standard/generate" # InferKit API URL
+    self.colaburl    = ""     # Ngrok url for Google Colab mode
+    self.apikey      = ""     # API key to use for InferKit API calls
+    self.oaiapikey   = ""     # API key to use for OpenAI API calls
+    self.horde_api_key = "0000000000"
+    self.horde_worker_name = "My Awesome Instance"
+    self.horde_url = "https://horde.koboldai.net"
+    self.colab=True
+    self.cpu=False
+    self.peft=None
+    self.breakmodel_disklayers=None
+    self.breakmodel_gpulayers=None
+    self.breakmodel_layers=None
+    self.model="PygmalionAI/pygmalion-6b"
+    self.path=None
+    self.savemodel=True
+    self.badwordsids=[[6880], [50256], [42496], [4613], [17414], [22039], [16410], [27], [29], [38430], [37922], [15913], [24618], [28725], [58], [47175], [36937], [26700], [12878], [16471], [37981], [5218], [29795], [13412], [45160], [3693], [49778], [4211], [20598], [36475], [33409], [44167], [32406], [29847], [29342], [42669], [685], [25787], [7359], [3784], [5320], [33994], [33490], [34516], [43734], [17635], [24293], [9959], [23785], [21737], [28401], [18161], [26358], [32509], [1279], [38155], [18189], [26894], [6927], [14610], [23834], [11037], [14631], [26933], [46904], [22330], [25915], [47934], [38214], [1875], [14692], [41832], [13163], [25970], [29565], [44926], [19841], [37250], [49029], [9609], [44438], [16791], [17816], [30109], [41888], [47527], [42924], [23984], [49074], [33717], [31161], [49082], [30138], [31175], [12240], [14804], [7131], [26076], [33250], [3556], [38381], [36338], [32756], [46581], [17912], [49146]]
+  
 #==================================================================#
 # Startup
 #==================================================================#
@@ -1308,64 +1456,9 @@ def general_startup(override_args=None):
                 koboldai_vars.git_branch = item.replace("branch ", "").replace('"', '')
     
         logger.info("Running on Repo: {} Branch: {}".format(koboldai_vars.git_repository, koboldai_vars.git_branch))
-    
-    # Parsing Parameters
-    parser = argparse.ArgumentParser(description="KoboldAI Server")
-    parser.add_argument("--remote", action='store_true', help="Optimizes KoboldAI for Remote Play")
-    parser.add_argument("--noaimenu", action='store_true', help="Disables the ability to select the AI")
-    parser.add_argument("--ngrok", action='store_true', help="Optimizes KoboldAI for Remote Play using Ngrok")
-    parser.add_argument("--localtunnel", action='store_true', help="Optimizes KoboldAI for Remote Play using Localtunnel")
-    parser.add_argument("--host", type=str, default="Disabled", nargs="?", const="", help="Optimizes KoboldAI for LAN Remote Play without using a proxy service. --host opens to all LAN. Enable IP whitelisting by using a comma separated IP list. Supports individual IPs, ranges, and subnets --host 127.0.0.1,127.0.0.2,127.0.0.3,192.168.1.0-192.168.1.255,10.0.0.0/24,etc")
-    parser.add_argument("--port", type=int, help="Specify the port on which the application will be joinable")
-    parser.add_argument("--aria2_port", type=int, help="Specify the port on which aria2's RPC interface will be open if aria2 is installed (defaults to 6799)")
-    parser.add_argument("--model", help="Specify the Model Type to skip the Menu")
-    parser.add_argument("--path", help="Specify the Path for local models (For model NeoCustom or GPT2Custom)")
-    parser.add_argument("--apikey", help="Specify the API key to use for online services")
-    parser.add_argument("--sh_apikey", help="Specify the API key to use for txt2img from the Stable Horde. Get a key from https://horde.koboldai.net/register")
-    parser.add_argument("--req_model", type=str, action='append', required=False, help="Which models which we allow to generate for us during cluster mode. Can be specified multiple times.")
-    parser.add_argument("--revision", help="Specify the model revision for huggingface models (can be a git branch/tag name or a git commit hash)")
-    parser.add_argument("--cpu", action='store_true', help="By default unattended launches are on the GPU use this option to force CPU usage.")
-    parser.add_argument("--breakmodel", action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument("--breakmodel_layers", type=int, help=argparse.SUPPRESS)
-    parser.add_argument("--breakmodel_gpulayers", type=str, help="If using a model that supports hybrid generation, this is a comma-separated list that specifies how many layers to put on each GPU device. For example to put 8 layers on device 0, 9 layers on device 1 and 11 layers on device 2, use --breakmodel_gpulayers 8,9,11")
-    parser.add_argument("--breakmodel_disklayers", type=int, help="If using a model that supports hybrid generation, this is the number of layers to put in disk cache.")
-    parser.add_argument("--override_delete", action='store_true', help="Deleting stories from inside the browser is disabled if you are using --remote and enabled otherwise. Using this option will instead allow deleting stories if using --remote and prevent deleting stories otherwise.")
-    parser.add_argument("--override_rename", action='store_true', help="Renaming stories from inside the browser is disabled if you are using --remote and enabled otherwise. Using this option will instead allow renaming stories if using --remote and prevent renaming stories otherwise.")
-    parser.add_argument("--configname", help="Force a fixed configuration name to aid with config management.")
-    parser.add_argument("--colab", action='store_true', help="Optimize for Google Colab.")
-    parser.add_argument("--nobreakmodel", action='store_true', help="Disables Breakmodel support completely.")
-    parser.add_argument("--unblock", action='store_true', default=False, help="Unblocks the KoboldAI port to be accessible from other machines without optimizing for remote play (It is recommended to use --host instead)")
-    parser.add_argument("--quiet", action='store_true', default=False, help="If present will suppress any story related text from showing on the console")
-    parser.add_argument("--no_aria2", action='store_true', default=False, help="Prevents KoboldAI from using aria2 to download huggingface models more efficiently, in case aria2 is causing you issues")
-    parser.add_argument("--lowmem", action='store_true', help="Extra Low Memory loading for the GPU, slower but memory does not peak to twice the usage")
-    parser.add_argument("--savemodel", action='store_true', help="Saves the model to the models folder even if --colab is used (Allows you to save models to Google Drive)")
-    parser.add_argument("--cacheonly", action='store_true', help="Does not save the model to the models folder when it has been downloaded in the cache")
-    parser.add_argument("--customsettings", help="Preloads arguements from json file. You only need to provide the location of the json file. Use customsettings.json template file. It can be renamed if you wish so that you can store multiple configurations. Leave any settings you want as default as null. Any values you wish to set need to be in double quotation marks")
-    parser.add_argument("--no_ui", action='store_true', default=False, help="Disables the GUI and Socket.IO server while leaving the API server running.")
-    parser.add_argument("--summarizer_model", action='store', default="philschmid/bart-large-cnn-samsum", help="Huggingface model to use for summarization. Defaults to sshleifer/distilbart-cnn-12-6")
-    parser.add_argument("--max_summary_length", action='store', default=75, help="Maximum size for summary to send to image generation")
-    parser.add_argument("--multi_story", action='store_true', default=False, help="Allow multi-story mode (experimental)")
-    parser.add_argument("--peft", type=str, help="Specify the path or HuggingFace ID of a Peft to load it. Not supported on TPU. (Experimental)")
-    parser.add_argument("--trust_remote_code", action='store_true', default=False, help="Allow Huggingface Models to Execute Code (Insecure!)")  
-     
-    parser.add_argument('-f', action='store', help="option for compatability with colab memory profiles")
-    parser.add_argument('-v', '--verbosity', action='count', default=0, help="The default logging level is ERROR or higher. This value increases the amount of logging seen in your screen")
-    parser.add_argument('-q', '--quiesce', action='count', default=0, help="The default logging level is ERROR or higher. This value decreases the amount of logging seen in your screen")
-
-    #args: argparse.Namespace = None
-    if "pytest" in sys.modules and override_args is None:
-        args = parser.parse_args([])
-        return
-    if override_args is not None:
-        import shlex
-        args = parser.parse_args(shlex.split(override_args))
-    elif(os.environ.get("KOBOLDAI_ARGS") is not None):
-        import shlex
-        args = parser.parse_args(shlex.split(os.environ["KOBOLDAI_ARGS"]))
-    else:
-        args = parser.parse_args()
-    
-    utils.args = args
+        
+    args=VarClass()
+    utils.args = Namespace()
 
 
 
@@ -1393,36 +1486,11 @@ def general_startup(override_args=None):
                         setattr(args, arg, False)
                 else:
                     setattr(args, arg, os.environ[arg])
-    set_logger_verbosity(args.verbosity)
-    quiesce_logger(args.quiesce)
-    if args.customsettings:
-        f = open (args.customsettings)
-        importedsettings = json.load(f)
-        for items in importedsettings:
-            if importedsettings[items] is not None:
-                setattr(args, items, importedsettings[items])            
-        f.close()
-    
-    if args.no_ui:
-        def new_emit(*args, **kwargs):
-            return
-        old_emit = socketio.emit
-        socketio.emit = new_emit
 
-    args.max_summary_length = int(args.max_summary_length)
 
     if args.model:
         koboldai_vars.model = args.model;
     koboldai_vars.revision = args.revision
-    koboldai_settings.multi_story = args.multi_story
-
-    if args.apikey:
-        koboldai_vars.apikey = args.apikey
-        koboldai_vars.horde_api_key = args.apikey
-    if args.sh_apikey:
-        koboldai_vars.horde_api_key = args.sh_apikey
-    if args.req_model:
-        koboldai_vars.cluster_requested_models = args.req_model
 
     if args.colab:
         args.remote = True;
@@ -1441,35 +1509,6 @@ def general_startup(override_args=None):
 
     if args.remote:
         koboldai_vars.host = True;
-
-    if args.ngrok:
-        koboldai_vars.host = True;
-
-    if args.localtunnel:
-        koboldai_vars.host = True;
-
-    if args.host != "Disabled":
-            # This means --host option was submitted without an argument
-            # Enable all LAN IPs (0.0.0.0/0)
-        koboldai_vars.host = True
-        args.unblock = True
-        if args.host != "":
-            # Check if --host option was submitted with an argument
-            # Parse the supplied IP(s) and add them to the allowed IPs list
-            enable_whitelist = True
-            for ip_str in args.host.split(","):
-                if "/" in ip_str:
-                    allowed_ips |= set(str(ip) for ip in ipaddress.IPv4Network(ip_str, strict=False).hosts())
-                elif "-" in ip_str:
-                    start_ip, end_ip = ip_str.split("-")
-                    start_ip_int = int(ipaddress.IPv4Address(start_ip))
-                    end_ip_int = int(ipaddress.IPv4Address(end_ip))
-                    allowed_ips |= set(str(ipaddress.IPv4Address(ip)) for ip in range(start_ip_int, end_ip_int + 1))
-                else:
-                    allowed_ips.add(ip_str.strip())
-            # Sort and print the allowed IPs list
-            allowed_ips = sorted(allowed_ips, key=lambda ip: int(''.join([i.zfill(3) for i in ip.split('.')])))
-            print(f"Allowed IPs: {allowed_ips}")
 
     if args.trust_remote_code:
         logger.warning("EXECUTION OF UNSAFE REMOTE CODE IS ENABLED!!!")
@@ -1971,7 +2010,7 @@ def load_model(use_gpu=True, gpu_layers=None, disk_layers=None, initial_load=Fal
         )
 
         model.load(
-            save_model=not (args.colab or args.cacheonly) or args.savemodel,
+            save_model=True,
             initial_load=initial_load,
         )
         logger.info(f"Pipeline created: {koboldai_vars.model}")
