@@ -51,7 +51,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
         self.init_model_config()
 
         tf_kwargs = {
-            "low_cpu_mem_usage": True,
+            "low_cpu_mem_usage": True,  
         }
 
         if utils.koboldai_vars.model_type == "gpt2":
@@ -78,6 +78,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
                 dematerialized_modules=True, use_accelerate_init_empty_weights=True
             ):
                 try:
+                    print(self.model_config)
                     metamodel = AutoModelForCausalLM.from_config(self.model_config)
                     utils.layers_module_names = utils.get_layers_module_names(metamodel)
                     utils.module_names = list(metamodel.state_dict().keys())
