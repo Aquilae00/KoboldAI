@@ -101,6 +101,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
 
             if self.get_local_model_path():
                 # Model is stored locally, load it.
+                
                 self.model = self._get_model(self.get_local_model_path(), tf_kwargs)
                 self.tokenizer = self._get_tokenizer(self.get_local_model_path())
             else:
@@ -239,7 +240,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
                                     ),
                                 )
                     shutil.rmtree("cache/")
-
+        print(tf_kwargs)
         self.patch_embedding()
 
         if utils.koboldai_vars.hascuda:
