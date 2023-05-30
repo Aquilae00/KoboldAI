@@ -1,0 +1,5 @@
+torch
+transformers
+sentencepiece
+accelerate
+safetensors==0.3.0
