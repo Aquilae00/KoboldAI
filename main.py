@@ -1,9 +1,13 @@
 from pydantic import BaseModel
-import aiserver3
+import os
+import aiserver4
 
-aiserver3.general_startup()
-aiserver3.patch_transformers()
-aiserver3.load_model(**{'initial_load':True})
+aiserver4.general_startup()
+aiserver4.patch_transformers()
+if os.path.exists('/persistent-storage/TehVenom_Pygmalion-7b-Merged-Safetensors'):
+    aiserver4.load_model(**{'initial_load':False})
+else:
+    aiserver4.load_model(**{'initial_load':True})
 
 class Item(BaseModel):
     prompt: str
@@ -17,7 +21,7 @@ def predict(item, run_id, logger):
 
     ##Do something with parameters from item
 
-    schema = aiserver3.GenerationInputSchema
+    schema = aiserver4.GenerationInputSchema
     schema.prompt = item.prompt
     schema.use_story = False
     schema.use_memory = False
@@ -37,5 +41,5 @@ def predict(item, run_id, logger):
     schema.sampler_order = [6, 0, 1, 2, 3, 4, 5]
     schema.n = item.n
 
-    result = aiserver3._generate_text(schema)
+    result = aiserver4._generate_text(schema)
     return result

@@ -148,7 +148,8 @@ class HFInferenceModel(InferenceModel):
             if os.path.exists(model_path):
                 return model_path
 
-            model_path = os.path.join("models", model_path)
+            # model_path = os.path.join("persistent-storage", model_path)
+            model_path = f"/persistent-storage/{model_path}"
 
             try:
                 assert os.path.exists(model_path)
@@ -162,7 +163,7 @@ class HFInferenceModel(InferenceModel):
         if legacy:
             ret = basename
         else:
-            ret = os.path.join("models", basename)
+            ret = f"/persistent-storage/{basename}"
 
         if os.path.isdir(ret) or ignore_existance:
             return ret
