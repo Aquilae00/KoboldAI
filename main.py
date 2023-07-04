@@ -4,7 +4,7 @@ import aiserver4
 
 aiserver4.general_startup()
 aiserver4.patch_transformers()
-if os.path.exists('/persistent-storage/TehVenom_Pygmalion-7b-Merged-Safetensors'):
+if os.path.exists('/persistent-storage/TheBloke_Wizard-Vicuna-13B-Uncensored-HF'):
     aiserver4.load_model(**{'initial_load':False})
 else:
     aiserver4.load_model(**{'initial_load':True})
