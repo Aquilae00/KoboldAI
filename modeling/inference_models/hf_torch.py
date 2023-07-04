@@ -335,7 +335,7 @@ class HFTorchInferenceModel(HFInferenceModel):
             model = AutoGPTQForCausalLM.from_quantized(
                 location,
                 use_safetensors=True,
-                model_basename="Wizard-Vicuna-30B-Uncensored-GPTQ-4bit.act.order",
+                model_basename="Wizard-Vicuna-13B-Uncensored-GPTQ-4bit-128g.compat.no-act-order",
                 device="cuda:0",
                 use_triton=False,  # True or False
                 quantize_config=quantize_config,

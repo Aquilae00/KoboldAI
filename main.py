@@ -4,10 +4,11 @@ import aiserver4
 
 aiserver4.general_startup()
 aiserver4.patch_transformers()
-if os.path.exists('/persistent-storage/TehVenom_Pygmalion-7b-Merged-Safetensors'):
-    aiserver4.load_model(**{'initial_load':False})
+if os.path.exists("/persistent-storage/TheBloke_Wizard-Vicuna-13B-Uncensored-GPTQ"):
+    aiserver4.load_model(**{"initial_load": False})
 else:
-    aiserver4.load_model(**{'initial_load':True})
+    aiserver4.load_model(**{"initial_load": True})
+
 
 class Item(BaseModel):
     prompt: str
@@ -15,6 +16,7 @@ class Item(BaseModel):
     max_length: int
     temperature: float
     top_p: float
+
 
 def predict(item, run_id, logger):
     item = Item(**item)
@@ -36,7 +38,7 @@ def predict(item, run_id, logger):
     schema.tfs = 0.9
     schema.top_a = 0
     schema.top_k = 0
-    schema.top_p = item.top_p 
+    schema.top_p = item.top_p
     schema.typical = 1
     schema.sampler_order = [6, 0, 1, 2, 3, 4, 5]
     schema.n = item.n

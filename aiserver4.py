@@ -49,13 +49,13 @@ class Namespace:
         self.breakmodel_disklayers = None
         self.breakmodel_gpulayers = None
         self.breakmodel_layers = None
-        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
+        self.model = "TheBloke/Wizard-Vicuna-13B-Uncensored-GPTQ"
         self.no_aria2 = None
 
 
 class VarClass:
     def __init__(self):
-        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
+        self.model = "TheBloke/Wizard-Vicuna-13B-Uncensored-GPTQ"
         self.noai = (
             False  # Runs the script without starting up the transformers pipeline
         )
@@ -216,8 +216,8 @@ class VarClass:
         self.breakmodel_disklayers = None
         self.breakmodel_gpulayers = None
         self.breakmodel_layers = None
-        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
-        self.path = '/persistent-storage'
+        self.model = "TheBloke/Wizard-Vicuna-13B-Uncensored-GPTQ"
+        self.path = "/persistent-storage"
         self.savemodel = True
         self.badwordsids = [
             [6880],
@@ -429,7 +429,9 @@ def general_startup(override_args=None):
                 colors.CYAN, colors.END
             )
         )
-        modpath = fileops.getdirpath(getcwd() + "/persistent-storage", "Select Model Folder")
+        modpath = fileops.getdirpath(
+            getcwd() + "/persistent-storage", "Select Model Folder"
+        )
 
         if modpath:
             # Save directory to koboldai_vars
@@ -446,7 +448,7 @@ def general_startup(override_args=None):
             koboldai_vars.colaburl = args.path + "/request"
             # Lets just use the same parameter to keep it simple
 
-    koboldai_vars.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
+    koboldai_vars.model = "TheBloke/Wizard-Vicuna-13B-Uncensored-GPTQ"
 
 
 def unload_model():
