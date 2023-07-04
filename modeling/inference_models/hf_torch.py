@@ -215,6 +215,7 @@ class HFTorchInferenceModel(HFInferenceModel):
         # finished on the main model.
         if utils.args.peft:
             from peft import PeftModel, PeftConfig
+
             local_peft_dir = os.path.join(m_self.get_local_model_path(), "peft")
 
             # Make PEFT dir if it doesn't exist
@@ -223,8 +224,12 @@ class HFTorchInferenceModel(HFInferenceModel):
             except FileExistsError:
                 pass
 
-            peft_local_path = os.path.join(local_peft_dir, utils.args.peft.replace("/", "_"))
-            logger.debug(f"Loading PEFT '{utils.args.peft}', possible local path is '{peft_local_path}'.")
+            peft_local_path = os.path.join(
+                local_peft_dir, utils.args.peft.replace("/", "_")
+            )
+            logger.debug(
+                f"Loading PEFT '{utils.args.peft}', possible local path is '{peft_local_path}'."
+            )
 
             peft_installed_locally = True
             possible_peft_locations = [peft_local_path, utils.args.peft]
@@ -237,12 +242,18 @@ class HFTorchInferenceModel(HFInferenceModel):
                 except ValueError:
                     peft_installed_locally = False
                     if i == len(possible_peft_locations) - 1:
-                        raise RuntimeError(f"Unable to load PeftModel for given name '{utils.args.peft}'. Does it exist?")
+                        raise RuntimeError(
+                            f"Unable to load PeftModel for given name '{utils.args.peft}'. Does it exist?"
+                        )
                 except RuntimeError:
-                    raise RuntimeError("Error while loading PeftModel. Are you using the correct model?")
+                    raise RuntimeError(
+                        "Error while loading PeftModel. Are you using the correct model?"
+                    )
 
             if not peft_installed_locally:
-                logger.debug(f"PEFT not saved to models folder; saving to '{peft_local_path}'")
+                logger.debug(
+                    f"PEFT not saved to models folder; saving to '{peft_local_path}'"
+                )
                 m_self.model.save_pretrained(peft_local_path)
 
         return super()._post_load()
@@ -317,7 +328,20 @@ class HFTorchInferenceModel(HFInferenceModel):
 
         # Try to determine model type from either AutoModel or falling back to legacy
         try:
-            return AutoModelForCausalLM.from_pretrained(location, **tf_kwargs)
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
+
+            quantize_config = BaseQuantizeConfig.from_pretrained(location)
+            model = AutoGPTQForCausalLM.from_quantized(
+                location,
+                use_safetensors=True,
+                model_basename="Wizard-Vicuna-30B-Uncensored-GPTQ-4bit.act.order",
+                device="cuda:0",
+                use_triton=False,  # True or False
+                quantize_config=quantize_config,
+                torch_dtype=torch.float16,
+            )
+            return model
         except Exception as e:
             traceback_string = traceback.format_exc().lower()
 
@@ -371,7 +395,7 @@ class HFTorchInferenceModel(HFInferenceModel):
         gpu_blocks = breakmodel.gpu_blocks
         ram_blocks = len(utils.layers_module_names) - sum(gpu_blocks)
         cumulative_gpu_blocks = tuple(itertools.accumulate(gpu_blocks))
-        device_map = {}
+        # device_map = {}
 
         for name in utils.layers_module_names:
             layer = int(name.rsplit(".", 1)[1])
@@ -543,7 +567,7 @@ class HFTorchInferenceModel(HFInferenceModel):
                     total=num_tensors,
                     desc="Loading model tensors",
                     file=utils.UIProgressBarFile(),
-                    position=1
+                    position=1,
                 )
 
             if not is_safetensors:

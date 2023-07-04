@@ -49,13 +49,13 @@ class Namespace:
         self.breakmodel_disklayers = None
         self.breakmodel_gpulayers = None
         self.breakmodel_layers = None
-        self.model = "TehVenom/Pygmalion-7b-Merged-Safetensors"
+        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
         self.no_aria2 = None
 
 
 class VarClass:
     def __init__(self):
-        self.model = "TehVenom/Pygmalion-7b-Merged-Safetensors"
+        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
         self.noai = (
             False  # Runs the script without starting up the transformers pipeline
         )
@@ -94,9 +94,9 @@ class VarClass:
         self.sp = None  # Current soft prompt tensor (as a NumPy array)
         self.sp_length = 0  # Length of current soft prompt in tokens, or 0 if not using a soft prompt
         self.has_genmod = False  # Whether or not at least one loaded Lua userscript has a generation modifier
-        self.breakmodel = True  # For GPU users, whether to use both system RAM and VRAM to conserve VRAM while offering speedup compared to CPU-only
+        self.breakmodel = False  # For GPU users, whether to use both system RAM and VRAM to conserve VRAM while offering speedup compared to CPU-only
         self.bmsupported = False  # Whether the breakmodel option is supported (GPT-Neo/GPT-J/XGLM/OPT only, currently)
-        self.nobreakmodel = False  # Something specifically requested Breakmodel to be disabled (For example a models config)
+        self.nobreakmodel = True  # Something specifically requested Breakmodel to be disabled (For example a models config)
         self.smandelete = (
             False  # Whether stories can be deleted from inside the browser
         )
@@ -216,7 +216,7 @@ class VarClass:
         self.breakmodel_disklayers = None
         self.breakmodel_gpulayers = None
         self.breakmodel_layers = None
-        self.model = "TehVenom/Pygmalion-7b-Merged-Safetensors"
+        self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
         self.path = None
         self.savemodel = True
         self.badwordsids = [
@@ -446,7 +446,7 @@ def general_startup(override_args=None):
             koboldai_vars.colaburl = args.path + "/request"
             # Lets just use the same parameter to keep it simple
 
-    koboldai_vars.model = "TehVenom/Pygmalion-7b-Merged-Safetensors"
+    koboldai_vars.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
 
 
 def unload_model():
@@ -695,7 +695,7 @@ def load_model(
     koboldai_vars.horde_share = False
 
     if initial_load:
-        use_breakmodel_args = True
+        use_breakmodel_args = False
 
     # reset_model_settings()
     # koboldai_vars.reset_model()

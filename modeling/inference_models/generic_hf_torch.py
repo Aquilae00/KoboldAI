@@ -51,7 +51,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
         self.init_model_config()
 
         tf_kwargs = {
-            "low_cpu_mem_usage": True,  
+            "low_cpu_mem_usage": False,
         }
 
         if utils.koboldai_vars.model_type == "gpt2":
@@ -101,7 +101,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
 
             if self.get_local_model_path():
                 # Model is stored locally, load it.
-                
+
                 self.model = self._get_model(self.get_local_model_path(), tf_kwargs)
                 self.tokenizer = self._get_tokenizer(self.get_local_model_path())
             else:
@@ -204,7 +204,9 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
                                     pass
 
                             if not any_success:
-                                raise RuntimeError(f"Couldn't find any of {possible_checkpoint_names} in cache for {self.model_name} @ '{utils.koboldai_vars.revisison}'")
+                                raise RuntimeError(
+                                    f"Couldn't find any of {possible_checkpoint_names} in cache for {self.model_name} @ '{utils.koboldai_vars.revisison}'"
+                                )
                         else:
                             # Handle saving sharded models
 
@@ -241,7 +243,7 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
                                 )
                     shutil.rmtree("cache/")
         print(tf_kwargs)
-        self.patch_embedding()
+        # self.patch_embedding()
 
         if utils.koboldai_vars.hascuda:
             if utils.koboldai_vars.usegpu:

@@ -77,7 +77,7 @@ def patch_transformers_loader() -> None:
 
     @classmethod
     def new_from_pretrained(cls, pretrained_model_name_or_path, *model_args, **kwargs):
-        utils.koboldai_vars.fp32_model = False
+        utils.koboldai_vars.fp32_model = True
         utils.num_shards = None
         utils.current_shard = 0
         utils.from_pretrained_model_name = pretrained_model_name_or_path

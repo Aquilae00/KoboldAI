@@ -706,11 +706,11 @@ class model_settings(settings):
         self.numseqs     = 1       # Number of sequences to ask the generator to create
         self.generated_tkns = 0    # If using a backend that supports Lua generation modifiers, how many tokens have already been generated, otherwise 0
         self.badwordsids = []
-        self.fp32_model  = False  # Whether or not the most recently loaded HF model was in fp32 format
+        self.fp32_model  = True  # Whether or not the most recently loaded HF model was in fp32 format
         self.modeldim    = -1     # Embedding dimension of your model (e.g. it's 4096 for GPT-J-6B and 2560 for GPT-Neo-2.7B)
         self.sampler_order = [6, 0, 1, 2, 3, 4, 5]
         self.newlinemode = "n"
-        self.lazy_load   = True # Whether or not to use torch_lazy_loader.py for transformers models in order to reduce CPU memory usage
+        self.lazy_load   = False # Whether or not to use torch_lazy_loader.py for transformers models in order to reduce CPU memory usage
         self.presets     = []   # Holder for presets
         self.selected_preset = ""
         self.uid_presets = []

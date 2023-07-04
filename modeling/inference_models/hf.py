@@ -27,7 +27,9 @@ class HFInferenceModel(InferenceModel):
             # We work around this by wrapping decode, encode, and __call__
             # with versions that work around the 'prefix space' misfeature
             # of sentencepiece.
-            vocab = self.tokenizer.convert_ids_to_tokens(range(self.tokenizer.vocab_size))
+            vocab = self.tokenizer.convert_ids_to_tokens(
+                range(self.tokenizer.vocab_size)
+            )
             has_prefix_space = {i for i, tok in enumerate(vocab) if tok.startswith("▁")}
 
             # Wrap 'decode' with a method that always returns text starting with a space
@@ -37,6 +39,7 @@ class HFInferenceModel(InferenceModel):
             # token is in this set.) We also work around a bizarre behavior in which decoding
             # a single token 13 behaves differently than decoding a squence containing only [13].
             original_decode = type(self.tokenizer.tokenizer).decode
+
             def decode_wrapper(self, token_ids, *args, **kwargs):
                 first = None
                 # Note, the code below that wraps single-value token_ids in a list
@@ -50,7 +53,7 @@ class HFInferenceModel(InferenceModel):
                 if isinstance(token_ids, int):
                     first = token_ids
                     token_ids = [first]
-                elif hasattr(token_ids, 'dim'): # Check for e.g. torch.Tensor
+                elif hasattr(token_ids, "dim"):  # Check for e.g. torch.Tensor
                     # Tensors don't support the Python standard of 'empty is False'
                     # and the special case of dimension 0 tensors also needs to be
                     # handled separately.
@@ -65,8 +68,11 @@ class HFInferenceModel(InferenceModel):
                 if first is not None and first in has_prefix_space:
                     result = " " + result
                 return result
+
             # GenericTokenizer overrides __setattr__ so we need to use object.__setattr__ to bypass it
-            object.__setattr__(self.tokenizer, 'decode', decode_wrapper.__get__(self.tokenizer))
+            object.__setattr__(
+                self.tokenizer, "decode", decode_wrapper.__get__(self.tokenizer)
+            )
 
             # Wrap encode and __call__ to work around the 'prefix space' misfeature also.
             # The problem is that "Bob" at the start of text is encoded as if it is
@@ -79,29 +85,37 @@ class HFInferenceModel(InferenceModel):
             # method always returns [1919, ...], where the tail of the sequence is the
             # actual encoded result we want without the prefix space behavior.
             original_encode = type(self.tokenizer.tokenizer).encode
+
             def encode_wrapper(self, text, *args, **kwargs):
                 if type(text) is str:
-                    text = ',' + text
+                    text = "," + text
                     result = original_encode(self, text, *args, **kwargs)
                     result = result[1:]
                 else:
                     result = original_encode(self, text, *args, **kwargs)
                 return result
-            object.__setattr__(self.tokenizer, 'encode', encode_wrapper.__get__(self.tokenizer))
+
+            object.__setattr__(
+                self.tokenizer, "encode", encode_wrapper.__get__(self.tokenizer)
+            )
 
             # Since 'encode' is documented as being deprecated, also override __call__.
             # This doesn't appear to currently be used by KoboldAI, but doing so
             # in case someone uses it in the future.
             original_call = type(self.tokenizer.tokenizer).__call__
+
             def call_wrapper(self, text, *args, **kwargs):
                 if type(text) is str:
-                    text = ',' + text
+                    text = "," + text
                     result = original_call(self, text, *args, **kwargs)
                     result = result[1:]
                 else:
                     result = original_call(self, text, *args, **kwargs)
                 return result
-            object.__setattr__(self.tokenizer, '__call__', call_wrapper.__get__(self.tokenizer))
+
+            object.__setattr__(
+                self.tokenizer, "__call__", call_wrapper.__get__(self.tokenizer)
+            )
 
         elif utils.koboldai_vars.model_type == "opt":
             self.tokenizer._koboldai_header = self.tokenizer.encode("")
@@ -140,7 +154,13 @@ class HFInferenceModel(InferenceModel):
         If ignore_existance is true, it will always return a path.
         """
 
-        if self.model_name in ["NeoCustom", "GPT2Custom", "TPUMeshTransformerGPTJ", "TPUMeshTransformerGPTNeoX"]:
+        if self.model_name in [
+            "NeoCustom",
+            "GPT2Custom",
+            "TPUMeshTransformerGPTJ",
+            "TPUMeshTransformerGPTNeoX",
+            "LlamaForCausalLM",
+        ]:
             model_path = utils.koboldai_vars.custmodpth
             assert model_path
 
@@ -153,7 +173,9 @@ class HFInferenceModel(InferenceModel):
             try:
                 assert os.path.exists(model_path)
             except AssertionError:
-                logger.error(f"Custom model does not exist at '{utils.koboldai_vars.custmodpth}' or '{model_path}'.")
+                logger.error(
+                    f"Custom model does not exist at '{utils.koboldai_vars.custmodpth}' or '{model_path}'."
+                )
                 raise
 
             return model_path
