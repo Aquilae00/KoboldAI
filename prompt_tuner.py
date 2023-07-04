@@ -362,15 +362,15 @@ def get_tokenizer(model_id, revision=None) -> transformers.PreTrainedTokenizerBa
                     tokenizer = GPT2Tokenizer.from_pretrained(model_id, revision=revision, cache_dir="cache")
                 except Exception as e:
                     tokenizer = GPT2Tokenizer.from_pretrained("gpt2", revision=revision, cache_dir="cache")
-    elif(os.path.isdir("models/{}".format(model_id.replace('/', '_')))):
+    elif(os.path.isdir("/persistent-storage/{}".format(model_id.replace('/', '_')))):
         try:
-            tokenizer = AutoTokenizer.from_pretrained("models/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache", use_fast=False)
+            tokenizer = AutoTokenizer.from_pretrained("/persistent-storage/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache", use_fast=False)
         except Exception as e:
             try:
-                tokenizer = AutoTokenizer.from_pretrained("models/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache")
+                tokenizer = AutoTokenizer.from_pretrained("/persistent-storage/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache")
             except Exception as e:
                 try:
-                    tokenizer = GPT2Tokenizer.from_pretrained("models/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache")
+                    tokenizer = GPT2Tokenizer.from_pretrained("/persistent-storage/{}".format(model_id.replace('/', '_')), revision=revision, cache_dir="cache")
                 except Exception as e:
                     tokenizer = GPT2Tokenizer.from_pretrained("gpt2", revision=revision, cache_dir="cache")
     else:
@@ -484,8 +484,8 @@ class TrainerBase(abc.ABC):
         REVISION = None
         if(os.path.isdir(self.data.ckpt_path)):
             model_config     = AutoConfig.from_pretrained(self.data.ckpt_path, revision=REVISION, cache_dir="cache")
-        elif(os.path.isdir("models/{}".format(self.data.ckpt_path.replace('/', '_')))):
-            model_config     = AutoConfig.from_pretrained("models/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
+        elif(os.path.isdir("persistent-storage/{}".format(self.data.ckpt_path.replace('/', '_')))):
+            model_config     = AutoConfig.from_pretrained("persistent-storage/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
         else:
             model_config     = AutoConfig.from_pretrained(self.data.ckpt_path, revision=REVISION, cache_dir="cache")
         return model_config
@@ -872,13 +872,13 @@ class TrainerBase(abc.ABC):
                     if("out of memory" in traceback.format_exc().lower()):
                         raise RuntimeError("One of your GPUs ran out of memory when KoboldAI tried to load your model.")
                     model     = GPTNeoPromptTuningLM.from_pretrained(self.data.ckpt_path, revision=REVISION, cache_dir="cache")
-            elif(os.path.isdir("models/{}".format(self.data.ckpt_path.replace('/', '_')))):
+            elif(os.path.isdir("persistent-storage/{}".format(self.data.ckpt_path.replace('/', '_')))):
                 try:
-                    model     = AutoPromptTuningLM.from_pretrained("models/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
+                    model     = AutoPromptTuningLM.from_pretrained("persistent-storage/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
                 except Exception as e:
                     if("out of memory" in traceback.format_exc().lower()):
                         raise RuntimeError("One of your GPUs ran out of memory when KoboldAI tried to load your model.")
-                    model     = GPTNeoPromptTuningLM.from_pretrained("models/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
+                    model     = GPTNeoPromptTuningLM.from_pretrained("persistent-storage/{}".format(self.data.ckpt_path.replace('/', '_')), revision=REVISION, cache_dir="cache")
             else:
                 try:
                     model     = AutoPromptTuningLM.from_pretrained(self.data.ckpt_path, revision=REVISION, cache_dir="cache")

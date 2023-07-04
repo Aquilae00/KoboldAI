@@ -217,7 +217,7 @@ class VarClass:
         self.breakmodel_gpulayers = None
         self.breakmodel_layers = None
         self.model = "TheBloke/Wizard-Vicuna-30B-Uncensored-GPTQ"
-        self.path = None
+        self.path = '/persistent-storage'
         self.savemodel = True
         self.badwordsids = [
             [6880],
@@ -429,7 +429,7 @@ def general_startup(override_args=None):
                 colors.CYAN, colors.END
             )
         )
-        modpath = fileops.getdirpath(getcwd() + "/models", "Select Model Folder")
+        modpath = fileops.getdirpath(getcwd() + "/persistent-storage", "Select Model Folder")
 
         if modpath:
             # Save directory to koboldai_vars
