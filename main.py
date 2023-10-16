@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from modeling.serializer import serialise_model
 import os
 import aiserver4
 
@@ -9,9 +8,6 @@ if os.path.exists("/persistent-storage/TheBloke_Wizard-Vicuna-13B-Uncensored-HF"
     model = aiserver4.load_model(**{"initial_load": False})
 else:
     model = aiserver4.load_model(**{"initial_load": True})
-
-
-serialise_model(model, "/persistent-storage/serialized")
 
 
 class Item(BaseModel):
