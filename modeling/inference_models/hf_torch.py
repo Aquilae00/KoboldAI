@@ -330,7 +330,7 @@ class HFTorchInferenceModel(HFInferenceModel):
         # Try to determine model type from either AutoModel or falling back to legacy
         try:
             model = AutoModelForCausalLM.from_pretrained(location, **tf_kwargs)
-            serialise_model(model, "/persistent-storage/serialized")
+            # serialise_model(model, "/persistent-storage/serialized")
             return model
         except Exception as e:
             traceback_string = traceback.format_exc().lower()
