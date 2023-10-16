@@ -1,13 +1,17 @@
 from pydantic import BaseModel
+from modeling.serializer import serialise_model
 import os
 import aiserver4
 
 aiserver4.general_startup()
 aiserver4.patch_transformers()
 if os.path.exists("/persistent-storage/TheBloke_Wizard-Vicuna-13B-Uncensored-HF"):
-    aiserver4.load_model(**{"initial_load": False})
+    model = aiserver4.load_model(**{"initial_load": False})
 else:
-    aiserver4.load_model(**{"initial_load": True})
+    model = aiserver4.load_model(**{"initial_load": True})
+
+
+serialise_model(model, "/persistent-storage/serialized")
 
 
 class Item(BaseModel):

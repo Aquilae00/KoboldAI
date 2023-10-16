@@ -1069,6 +1069,8 @@ def load_model(
     koboldai_vars.aibusy = False
     if not os.path.exists("./softprompts"):
         os.mkdir("./softprompts")
+
+    return model
     # koboldai_vars.splist = [[f, get_softprompt_desc(os.path.join("./softprompts", f),None,True)] for f in os.listdir("./softprompts") if os.path.isfile(os.path.join("./softprompts", f)) and valid_softprompt(os.path.join("./softprompts", f))]
     # if initial_load and koboldai_vars.cloudflare_link != "":
     #     print(format(colors.GREEN) + "KoboldAI has finished loading and is available at the following link for UI 1: " + koboldai_vars.cloudflare_link + format(colors.END))
