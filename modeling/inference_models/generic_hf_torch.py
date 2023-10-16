@@ -102,10 +102,10 @@ class GenericHFTorchInferenceModel(HFTorchInferenceModel):
             if self.get_local_model_path():
                 # Model is stored locally, load it.
 
-                # self.model = self._get_model(self.get_local_model_path(), tf_kwargs)
-                self.model = deserialise_saved_model(
-                    "/persistent-storage/serialized", self.model_name
-                )
+                self.model = self._get_model(self.get_local_model_path(), tf_kwargs)
+                # self.model = deserialise_saved_model(
+                #     "/persistent-storage/serialized", self.model_name
+                # )
                 self.tokenizer = self._get_tokenizer(self.get_local_model_path())
             else:
                 # Model not stored locally, we need to download it.

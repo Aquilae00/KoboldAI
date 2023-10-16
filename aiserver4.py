@@ -3,6 +3,7 @@ from logger import logger, set_logger_verbosity, quiesce_logger
 import utils
 from modeling.patches import patch_transformers
 import torch
+from modeling.tensoriser import deserialise_saved_model
 import koboldai_settings
 import warnings
 from os import path, getcwd
@@ -907,14 +908,14 @@ def load_model(
             GenericHFTorchInferenceModel,
         )
 
-        model = GenericHFTorchInferenceModel(
-            koboldai_vars.model, lazy_load=koboldai_vars.lazy_load, low_mem=args.lowmem
-        )
-
-        model.load(
-            save_model=True,
-            initial_load=initial_load,
-        )
+        # model = GenericHFTorchInferenceModel(
+        #     koboldai_vars.model, lazy_load=koboldai_vars.lazy_load, low_mem=args.lowmem
+        # )
+        model = deserialise_saved_model('/persistent-storage/serialized', 'TheBloke/Wizard-Vicuna-13B-Uncensored-HF')
+        # model.load(
+        #     save_model=True,
+        #     initial_load=initial_load,
+        # )
         logger.info(f"Pipeline created: {koboldai_vars.model}")
     else:
         # TPU

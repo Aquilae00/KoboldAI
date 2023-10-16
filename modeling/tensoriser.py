@@ -1,6 +1,9 @@
-from tensorizer import TensorSerializer
+from tensorizer import TensorSerializer, TensorDeserializer
 from transformers import AutoConfig, AutoModelForCausalLM
+from tensorizer.utils import no_init_or_tensor
+
 import time
+
 
 def serialise_model(model, save_path):
     """Serialise the model and save the weights to the save_path"""
@@ -15,10 +18,6 @@ def serialise_model(model, save_path):
     except Exception as e:
         print("Serialisation failed with error: ", e)
         return False
-
-
-from tensorizer import TensorDeserializer
-from tensorizer.utils import no_init_or_tensor
 
 
 def deserialise_saved_model(model_path, model_id, plaid=True):
