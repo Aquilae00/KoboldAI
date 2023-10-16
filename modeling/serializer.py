@@ -1,6 +1,8 @@
-from tensorizer import TensorSerializer
+from tensorizer import TensorSerializer, TensorDeserializer
 from transformers import AutoConfig, AutoModelForCausalLM
+from tensorizer.utils import no_init_or_tensor
 import time
+
 
 def serialise_model(model, save_path):
     """Serialise the model and save the weights to the save_path"""
@@ -15,3 +17,26 @@ def serialise_model(model, save_path):
     except Exception as e:
         print("Serialisation failed with error: ", e)
         return False
+
+
+def deserialise_saved_model(model_path, model_id, plaid=True):
+    """Deserialise the model from the model_path and load into GPU memory"""
+
+    # create a config object that we can use to init an empty model
+    config = AutoConfig.from_pretrained(model_id)
+
+    # Init an empty model without loading weights into gpu. We'll load later.
+    with no_init_or_tensor():
+        # Load your model here using whatever class you need to initialise an empty model from a config.
+        model = AutoModelForCausalLM.from_config(config)
+
+    # Create the deserialiser object
+    #   Note: plaid_mode is a flag that does a much faster deserialisation but isn't safe for training.
+    #    -> only use it for inference.
+    deserializer = TensorDeserializer(model_path, plaid_mode=True)
+
+    # Deserialise the model straight into GPU (zero-copy)
+    deserializer.load_into_module(model)
+    deserializer.close()
+
+    return model
